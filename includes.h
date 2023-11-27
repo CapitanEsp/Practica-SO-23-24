@@ -18,5 +18,7 @@
 #include <sys/ipc.h>
 #include <sys/shm.h>
 #include <sys/mman.h>
+//Librerias P3
+#include "unistd.h"
 
 #endif //P0_INCLUDES_H
