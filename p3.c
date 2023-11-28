@@ -6,7 +6,7 @@
 #include "TADLista.h"
 
 
-///valgrind --leak-check=full --show-leak-kinds=all ./p2
+///valgrind --leak-check=full --show-leak-kinds=all ./p3
 int main() {
     int fin = 0, num;        //Creo la variable del bucle y la variable donde guardo en cuantas partes se divide el comando
     char t[TCOM];               //Variable donde guardo el comando sin dividir

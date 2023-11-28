@@ -78,7 +78,7 @@ static struct SEN sigstrnum[]={
 
 
 void uid(char ** args,int nargs);
-void showvar(char ** args,int nargs);
+void showvar(char ** args);
 void changevar(char ** args,int nargs);
 void subsvar(char ** args,int nargs);
 void showenv(char ** args,int nargs);

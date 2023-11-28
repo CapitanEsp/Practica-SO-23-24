@@ -12,101 +12,101 @@ void initItem(tItemP *i, int pid,char * launch, char * status) {
     strcpy(i->status, status);
 }
 
-bool createNodeM(tPosP *P){
+bool createNodeP(tPosP *P){
     *P=malloc(sizeof(struct tNodeP));
-    return *P!=MNULL;
+    return *P!=PNULL;
 }
 
-void createEmptyListM(tListP *L){
-    *L=MNULL;
+void createEmptyListP(tListP *L){
+    *L=PNULL;
 }
 
-bool isEmptyListM(tListP L){
-    return L==MNULL;
+bool isEmptyListP(tListP L){
+    return L==PNULL;
 }
 
-tPosP firstM(tListP L){
+tPosP firstP(tListP L){
     return L;
 }
 
-tPosP lastM(tListP L){
+tPosP lastP(tListP L){
     tPosP p;
-    for(p=L; p->next!=MNULL; p=p->next);
+    for(p=L; p->next!=PNULL; p=p->next);
     return p;
 }
 
-tPosP nextM(tPosP P, tListP L){
+tPosP nextP(tPosP P, tListP L){
     return P->next;
 }
 
-tPosP previousM(tPosP P, tListP L){
+tPosP previousP(tPosP P, tListP L){
     tPosP p;
-    if(P==L) p=MNULL;
+    if(P==L) p=PNULL;
     else for(p=L; p->next!=P; p=p->next);
     return p;
 }
 
-tPosP findDataM(int I, tListP L){
+tPosP findDataP(int I, tListP L){
     tPosP p;
     tItemP i;
 
-    if (isEmptyListM(L)) p=MNULL;
-    else for(p=firstM(L);p!=MNULL;p= nextM(p,L)){
-            i= getDataM(p,L);
+    if (isEmptyListP(L)) p=PNULL;
+    else for(p=firstP(L);p!=PNULL;p= nextP(p,L)){
+            i= getDataP(p,L);
             if(i.pid==I) break;
         }
     return p;
 }
 
-bool insertDataM(const tItemP i, tListP *L){
+bool insertDataP(const tItemP i, tListP *L){
 
     tPosP q,p;
     bool aux= 1;
 
-    if(!createNodeM(&q)) aux=0;
+    if(!createNodeP(&q)) aux=0;
     else{
         q->data=i;
-        q->next=MNULL;
-        if(*L==MNULL)*L=q;
+        q->next=PNULL;
+        if(*L==PNULL)*L=q;
         else{
-            for (p = *L; p->next != MNULL; p = p->next);
+            for (p = *L; p->next != PNULL; p = p->next);
             p->next = q;
         }
     }
     return aux;
 }
 
-tItemP getDataM(tPosP p, tListP L){
+tItemP getDataP(tPosP p, tListP L){
     return p->data;
 }
 
-void deleteAtPosM(tPosP p, tListP *L) {
+void deleteAtPosP(tPosP p, tListP *L) {
     tPosP q;
     if (p == *L) {//Caso de 1 solo elemento
-        *L = nextM(p, *L);//El primer elemento es el siguiente de L
+        *L = nextP(p, *L);//El primer elemento es el siguiente de L
     } else {//Cualquier otro caso
-        if (p == lastM(*L)) {//Caso última posición
-            q = previousM(lastM(*L), *L); //Selecciono el penúltimo
-            q->next = MNULL;
+        if (p == lastP(*L)) {//Caso última posición
+            q = previousP(lastP(*L), *L); //Selecciono el penúltimo
+            q->next = PNULL;
         } else {//Caso elemento del medio
-            q = nextM(p, *L);
-            p->data = getDataM(q, *L);
-            p->next = nextM(q, *L);
+            q = nextP(p, *L);
+            p->data = getDataP(q, *L);
+            p->next = nextP(q, *L);
             p = q;
         }
     }
     free(p);
 }
 
-void delListM( tListP *L){
+void delListP(tListP *L){
     tPosP p,q;
     p=*L;
-    while(p!=MNULL){
+    while(p!=PNULL){
         q=p->next;
         free(p);
         p=q;
     }
-    *L=MNULL;
+    *L=PULL;
 }
 
 #endif //P3_SO_24_LISTP_H

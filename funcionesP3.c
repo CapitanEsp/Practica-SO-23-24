@@ -1,11 +1,137 @@
 #include "funcionesP3.h"
-/*el siguiente codigo se da como ayuda por si se quiere utilizar*/
-/*NO ES OBLIGATORIO USARLO*/
-/*y pueden usarse funciones enteras o parte de funciones */
 
-/*Este fichero, ayudaP3.c no está pensado para ser compilado separadamente */
-/*, entre otras cosas, no contiene los includes necesarios*/
-/*y las constantes utilizadas, no están definidas en él*/
+//-------------------------------------------------------------------------------------------
+//FUNCIONES PRINCIPALES (AARON HAGO LO QUE PUEDO)
+//-------------------------------------------------------------------------------------------
+
+void uid(char *command, int nargs){
+    if(nargs > 2){
+        if(strcmp(command[1], "-get") == 0){
+            if(nargs == 3){
+                //Hacer codigo
+            }else{
+                perror("Numero de parametros incorrecto");
+            }
+        }
+        if(strcmp(command[1], "-set") == 0){
+            if(nargs == 3){
+                //Hacer codigo
+            }else{
+                if((nargs == 4) && (strcmp(command[2],"-l") == 0)){
+                    //Hacer codigo
+                }else{
+                    perror("Numero de parametros incorrecto");
+                }
+            }
+        }
+    }else{
+        if(nargs == 2){
+            //Hacer codigo
+        }else{
+            perror("Numero de parametros incorrecto");
+        }
+    }
+}
+
+void showvar(char ** args){
+    //Valor y direcciones de la variable de entorno
+}
+
+void changevar(char ** args,int nargs){
+    if(nargs == 3){
+        //Cambia el valor de una variable de entorno
+    }else{
+        if(nargs > 4 || nargs < 3){
+            perror("Numero de parametros incorrecto");
+        }
+        if(strcmp(command[1], "-a") == 0){
+            //Hacer codigo
+        }
+        if(strcmp(command[1], "-e") == 0){
+            //Hacer codigo
+        }
+        if(strcmp(command[1], "-p") == 0){
+            //Hacer codigo
+        }                
+    }
+}
+
+void subsvar(char ** args,int nargs){
+    if(nargs == 4){
+        //Hacer codigo
+    }else{
+        if(nargs > 5 || nargs < 4){
+            perror("Numero de parametros incorrecto");
+        }
+        if(strcmp(command[1], "-a") == 0){
+            //Hacer codigo
+        }
+        if(strcmp(command[1], "-e") == 0){
+            //Hacer codigo
+        }                
+    }
+}
+
+void showenv(char ** args,int nargs){
+    if(nargs == 2){
+        if(strcmp(command[1], "-environ") == 0){
+            //Hacer codigo
+        }
+        if(strcmp(command[1], "-addr") == 0){
+            //Hacer codigo
+        }     
+    }else{
+        perror("Numero de parametros incorrecto"); 
+    }
+}
+
+void my_Fork(char ** args,int nargs){
+    //No entendi ni chota
+}
+
+//void exec(char ** args,int nargs); //Acabo de ver el shell de referencia y me quede como estaba o peor
+
+
+void jobs(char ** args,int nargs){
+    //Lista los procesos en segundo plano
+}
+
+void deljobs(char ** args,int nargs){
+    if(nargs == 2){
+        if(strcmp(command[1], "-term") == 0){
+            //Hacer codigo
+        }
+        if(strcmp(command[1], "-sig") == 0){
+            //Hacer codigo
+        }     
+    }else{
+        perror("Numero de parametros incorrecto"); 
+    }
+}
+
+void job(char ** args, int nargs){
+    if(nargs <= 2 && nargs < 4){
+        if(strcmp(command[1], "-fg") == 0){
+            //Hacer codigo
+        }else{
+            //Hacer codigo
+        }
+    }else{
+        perror("Numero de parametros incorrecto"); 
+    }
+}
+
+//-------------------------------------------------------------------------------------------
+//FUNCIONES AUXILIARES
+//-------------------------------------------------------------------------------------------
+
+//Aaron eres el fucking MVP
+
+
+
+//-------------------------------------------------------------------------------------------
+//CODIGO DE AYUDA
+//-------------------------------------------------------------------------------------------
 
 void Cmd_fork (char *tr[]){
     pid_t pid;
