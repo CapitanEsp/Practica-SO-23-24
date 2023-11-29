@@ -6,10 +6,14 @@
 
 #include "listP.h"
 
-void initItem(tItemP *i, int pid,char * launch, char * status) {
-    i->pid=pid;
+void initItem(tItemP *i, int pid,char * launch, int status, int prio, char* user){
+    i->pid = pid;
     strcpy(i->launch, launch);
-    strcpy(i->status, status);
+    i->prio = prio;
+    strcpy(i->sig->name, sigstrnum[status]);
+    i->sig.num = status
+    strcpy(i->user, user);
+
 }
 
 bool createNodeP(tPosP *P){
@@ -106,7 +110,7 @@ void delListP(tListP *L){
         free(p);
         p=q;
     }
-    *L=PULL;
+    *L=PNULL;
 }
 
 #endif //P3_SO_24_LISTP_H

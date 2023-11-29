@@ -4,7 +4,7 @@
 //FUNCIONES PRINCIPALES (AARON HAGO LO QUE PUEDO)
 //-------------------------------------------------------------------------------------------
 
-void uid(char *command, int nargs){
+void uid(char **command, int nargs){
     if(nargs > 2){
         if(strcmp(command[1], "-get") == 0){
             if(nargs == 3){
@@ -37,7 +37,7 @@ void showvar(char ** args){
     //Valor y direcciones de la variable de entorno
 }
 
-void changevar(char ** args,int nargs){
+void changevar(char ** command, int nargs){
     if(nargs == 3){
         //Cambia el valor de una variable de entorno
     }else{
@@ -56,7 +56,7 @@ void changevar(char ** args,int nargs){
     }
 }
 
-void subsvar(char ** args,int nargs){
+void subsvar(char ** command,int nargs){
     if(nargs == 4){
         //Hacer codigo
     }else{
@@ -72,7 +72,7 @@ void subsvar(char ** args,int nargs){
     }
 }
 
-void showenv(char ** args,int nargs){
+void showenv(char ** command,int nargs){
     if(nargs == 2){
         if(strcmp(command[1], "-environ") == 0){
             //Hacer codigo
@@ -85,39 +85,90 @@ void showenv(char ** args,int nargs){
     }
 }
 
-void my_Fork(char ** args,int nargs){
+void my_Fork(char ** command,int nargs){
     //No entendi ni chota
 }
 
 //void exec(char ** args,int nargs); //Acabo de ver el shell de referencia y me quede como estaba o peor
 
 
-void jobs(char ** args,int nargs){
-    //Lista los procesos en segundo plano
+void jobs(tlistP L){
+    tPosP p;
+    tItemP data;
+    for(p = *L; p != PNULL; p = nextP(p, L)){
+        data = getDataP(p, L);
+        data.prio = getpriority(PRIO_PROCESS, data.pid);
+        data.sig.num = waitpid()
+        if(waitpid(data.pid, &data.sig.num, WNOHANG | WUNTRACED | WCONTINUED) == data.pid){
+            if (WIFEXITED(data.sig.num)) {
+                strcpy(data.sig.name, "TERMINADO");
+            } else if (WIFSIGNALED(data.sig.num)) {
+                strcpy(data.sig.name, "SENALADO");
+            } else if (WIFSTOPPED(data.sig.num)) {
+                strcpy(data.sig.name, "STOPPED");
+            } else if (WIFCONTINUED(data.sig.num))
+                strcpy(data.sig.name, "ACTIVO");
+        }
+        printf("%d\t%s p=%d %s %s (%d) %s", data.pid, data.user, data.prio, data.launch, data.sig.name, data.sig.num, data.comandName);
+    }
 }
 
-void deljobs(char ** args,int nargs){
+void deljobs(char ** command,int nargs, *L){
     if(nargs == 2){
+        tPosP p;
+        tItemP i;
         if(strcmp(command[1], "-term") == 0){
-            //Hacer codigo
+            for(p = L; p != PNULL; p = next(p, *L)){
+                i = getDataP(p, *L);
+                if(strcmp("TERMINADO", i.sig.name) == 0){
+                    deleteAtPosP(p, L);
+                }
+            }
         }
         if(strcmp(command[1], "-sig") == 0){
-            //Hacer codigo
+            for(p = L; p != PNULL; p = next(p, *L)){
+                i = getDataP(p, *L);
+                if(strcmp("SENALADO", i.sig.name) == 0){
+                    deleteAtPosP(p, L);
+                }
+            }
         }     
     }else{
         perror("Numero de parametros incorrecto"); 
     }
 }
 
-void job(char ** args, int nargs){
-    if(nargs <= 2 && nargs < 4){
-        if(strcmp(command[1], "-fg") == 0){
-            //Hacer codigo
-        }else{
-            //Hacer codigo
-        }
+void job(char ** command, int nargs, tListP *L){
+    if(nargs < 2){
+        jobs(*L);
     }else{
-        perror("Numero de parametros incorrecto"); 
+        if(nargs > 3){
+            perror("Numero de parametros incorrecto");
+        }else{
+            tPosP p;
+            tItemP i;
+            if(nargs == 2){
+                p = findDataP(atoi(command[1]), *L);
+                i = getDataP(p, *L);
+                printf("%d\t%s p=%d %s %s (%d) %s", i.pid, i.user, i.prio, i.launch, i.sig.name, i.sig.num, i.comandName);
+            }else{
+                if(strcmp(command[1], "-fg") == 0){
+                    p = findDataP(atoi(command[1]), *L);
+                    i = getDataP(p, *L);
+                    if(waitpid(atoi(command[1]), i->sig->num) != -1){
+                        if(WIFEXITED(i->sig->num){
+                            printf("Proceso %d terminado normalmente. Valor devuelto: %d\n", atoi(command[1]), WEXITSTATUS(i->sig->num));
+                            i->sig->name = "TERMINADO";
+                    }
+                    else if(WIFSIGNALED(i->sig->num){
+                        printf("Proceso %d terminado por la señal %d", atoi(command[1]), WTERMSIG(i->sig->num));
+                        i->sig->name = "SENALADO";
+                    }
+                    }
+
+                }
+            }
+        }        
     }
 }
 
