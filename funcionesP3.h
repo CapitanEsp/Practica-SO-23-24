@@ -12,9 +12,13 @@ void subsvar(char ** command,int nargs);
 void showenv(char ** command,int nargs);
 void my_Fork(char ** command,int nargs);
 //void exec(char ** args,int nargs);
-void jobs(char ** command,int nargs);
-void deljobs(char ** command,int nargs);
-void job(char ** command,int nargs);
+void jobs(char ** command,int nargs, tListP L);
+void deljobs(char ** command,int nargs, tListP *L);
+void job(char ** command, int nargs, tListP *L);
 void Random(char ** command,int nargs);
+
+//Func aux
+char * getUser(uid_t uid);
+uid_t getMyuid(char * name);
 
 #endif //P3_SO_24_FUNCIONESP3_H

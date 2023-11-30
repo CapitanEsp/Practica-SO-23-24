@@ -10,8 +10,8 @@ void initItem(tItemP *i, int pid,char * launch, int status, int prio, char* user
     i->pid = pid;
     strcpy(i->launch, launch);
     i->prio = prio;
-    strcpy(i->sig->name, sigstrnum[status]);
-    i->sig.num = status
+    i->sig.num = status;
+    strcpy(i->sig.name, i->sig.num);
     strcpy(i->user, user);
 
 }

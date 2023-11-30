@@ -11,6 +11,7 @@
 #include "TADLista.h"
 #include "listF.h"
 #include "listM.h"
+#include "listP.h"
 
 #define TCOM PATH_MAX
 #define MAX 10
@@ -18,7 +19,7 @@
 
 //Funciones para tratar los comandos
 int partir(char *inCommand, char* outCommand[]);
-int processCommand(char* command[], int aux, tList* L,tListF *F,tListM *M);
+int processCommand(char* command[], int aux, tList* L,tListF *F,tListM *M, tListP *P);
 
 //Funciones de los comandos en si
 void autores(char* Arg[], int aux);
@@ -27,7 +28,7 @@ void carpeta(char* Arg[], int aux);
 void fecha();
 void hora();
 void hist(char* Arg[], int aux, tList *L);
-void comandoN(char **comand, tList L, tListF F,tListM M);
+void comandoN(char **comand, tList L, tListF F,tListM M, tListP P);
 void infosis();
 void ayuda(char* Arg[], int aux);
 void Cmd_open(char * Arg[],tListF *L);

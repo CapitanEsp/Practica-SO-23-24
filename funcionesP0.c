@@ -7,6 +7,7 @@
 #include "listF.h"
 #include "funcionesP1.h"
 #include "funcionesP2.h"
+#include "funcionesP3.h"
 
 //Funciones para tratar los comandos
 
@@ -22,7 +23,7 @@ int partir(char *inCommand, char *outCommand[]) {
     }
 }
 
-int processCommand(char *command[], int aux, tList *L, tListF *F,tListM * M) {
+int processCommand(char *command[], int aux, tList *L, tListF *F,tListM * M, tListP *P) {
     if (aux > 0) {                                                      //Si el comando tiene contenido
         if (strcmp(command[0], "authors") == 0) {                      //Se comprueba que comando es comparando strings
             if (aux <= 2) {
@@ -62,7 +63,7 @@ int processCommand(char *command[], int aux, tList *L, tListF *F,tListM * M) {
             }
         } else if (strcmp(command[0], "comand") == 0) {
             if (aux == 2) {
-                comandoN(command, *L, *F,*M);
+                comandoN(command, *L, *F,*M, *P);
             } else if (aux == 1) {
                 printf("Error: Introduce una N\n");
             } else printf("Error: Exceso de argumentos\n");
@@ -115,6 +116,10 @@ int processCommand(char *command[], int aux, tList *L, tListF *F,tListM * M) {
             Recursive(command,aux);
         }  else if (strcmp(command[0], "mem") == 0) {
             mem(command,aux,*M);
+        }  else if (strcmp(command[0], "fork") == 0) {
+            my_Fork(command,aux);
+        }  else if (strcmp(command[0], "uid") == 0) {
+            uid(command,aux);
         }
         else if (strcmp(command[0], "pmap") == 0) {
             Do_MemPmap();
@@ -210,7 +215,7 @@ void hist(char **comand, int aux, tList *L) {
     }
 }
 
-void comandoN(char **comand, tList L, tListF F,tListM M) {
+void comandoN(char **comand, tList L, tListF F,tListM M, tListP P) {
     int n, n2;
     char *comando;
     char *auxcmd[TCOM];
@@ -222,7 +227,7 @@ void comandoN(char **comand, tList L, tListF F,tListM M) {
             printf("No se puede ejecutar comando comando\n");  //Se evita un bucle infinito
         } else {
             n2 = partir(comando, auxcmd);   //Si no, se parte el comando otra vez
-            processCommand(auxcmd, n2, &L, &F,&M);      //y se procesa el comando de nuevo.
+            processCommand(auxcmd, n2, &L, &F,&M, &P);      //y se procesa el comando de nuevo.
         }
     } else {
         perror("Error: El argumento es incorrecto o el digito no es valido.");

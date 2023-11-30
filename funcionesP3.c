@@ -5,33 +5,52 @@
 //-------------------------------------------------------------------------------------------
 
 void uid(char **command, int nargs){
-    if(nargs > 2){
-        if(strcmp(command[1], "-get") == 0){
-            if(nargs == 3){
-                //Hacer codigo
-            }else{
-                perror("Numero de parametros incorrecto");
-            }
-        }
-        if(strcmp(command[1], "-set") == 0){
-            if(nargs == 3){
-                //Hacer codigo
-            }else{
-                if((nargs == 4) && (strcmp(command[2],"-l") == 0)){
-                    //Hacer codigo
-                }else{
-                    perror("Numero de parametros incorrecto");
-                }
-            }
-        }
+    if(nargs < 3){
+        printf("Credencial real: %d, (%s)\n", getuid(), getUser(getuid()));
+        printf("Credencial efectiva: %d, (%s)\n", geteuid(), getUser(geteuid()));
     }else{
-        if(nargs == 2){
-            //Hacer codigo
-        }else{
-            perror("Numero de parametros incorrecto");
+        if(strcmp(command[1], "-set") == 0){
+            uid_t newuid;
+            if(strcmp(command[2], "-l") == 0){
+                if(nargs == 4){
+                    newuid = getMyuid(command[3]);
+                    if(seteuid(newuid) != 0){
+                        perror("Usuario no existente: ");
+                    }
+                }else{
+                    printf("Credencial real: %d, (%s)\n", getuid(), getUser(getuid()));
+                    printf("Credencial efectiva: %d, (%s)\n", geteuid(), getUser(geteuid()));                    
+                }
+            }else{
+                newuid = atoi(command[2]);
+                if(seteuid(newuid) != 0){
+                    perror("Imposible cambiar credencial: ");
+                }                
+            }
         }
     }
 }
+
+
+/*void uid(char **command, int nargs){
+    if(nargs > 2 && strcmp(command[1], "-set") == 0){
+        uid_t newuid;
+        if(strcmp(command[2], "-l") == 0){
+            newuid = getMyuid(command[3]);
+            if(seteuid(newuid) != 0){
+                perror("Usuario no existente: ");
+            }
+        }else{
+            newuid = atoi(command[2]);
+            if(seteuid(newuid) != 0){
+                perror("Imposible cambiar credencial: ");
+            }
+        }
+    }else{
+        printf("Credencial real: %d, (%s)\n", getuid(), getUser(getuid()));
+        printf("Credencial efectiva: %d, (%s)\n", geteuid(), getUser(geteuid()));
+    }
+}*/
 
 void showvar(char ** args){
     //Valor y direcciones de la variable de entorno
@@ -86,19 +105,29 @@ void showenv(char ** command,int nargs){
 }
 
 void my_Fork(char ** command,int nargs){
-    //No entendi ni chota
+    if(nargs == 1){
+        int pidHijo;
+        if((pidHijo = fork()) == 0){
+            printf("Ejecutando proceso %d\n", getpid());
+        }
+        else if (pidHijo!=-1){
+            waitpid(pidHijo, PNULL, 0);
+        }
+    }else{
+        perror("Numero de parametros incorrecto"); 
+    }
 }
 
 //void exec(char ** args,int nargs); //Acabo de ver el shell de referencia y me quede como estaba o peor
 
 
-void jobs(tlistP L){
+void jobs(char ** command,int nargs, tListP L){
     tPosP p;
     tItemP data;
-    for(p = *L; p != PNULL; p = nextP(p, L)){
+    for(p = L; p != PNULL; p = nextP(p, L)){
         data = getDataP(p, L);
-        data.prio = getpriority(PRIO_PROCESS, data.pid);
-        data.sig.num = waitpid()
+        data.prio = getpriority(data.prio, data.pid);
+        data.sig.num = waitpid(data.pid, PNULL, 0);
         if(waitpid(data.pid, &data.sig.num, WNOHANG | WUNTRACED | WCONTINUED) == data.pid){
             if (WIFEXITED(data.sig.num)) {
                 strcpy(data.sig.name, "TERMINADO");
@@ -113,7 +142,7 @@ void jobs(tlistP L){
     }
 }
 
-void deljobs(char ** command,int nargs, *L){
+void deljobs(char ** command, int nargs, tListP *L){
     if(nargs == 2){
         tPosP p;
         tItemP i;
@@ -140,7 +169,7 @@ void deljobs(char ** command,int nargs, *L){
 
 void job(char ** command, int nargs, tListP *L){
     if(nargs < 2){
-        jobs(*L);
+        jobs(command, nargs, *L);
     }else{
         if(nargs > 3){
             perror("Numero de parametros incorrecto");
@@ -155,17 +184,16 @@ void job(char ** command, int nargs, tListP *L){
                 if(strcmp(command[1], "-fg") == 0){
                     p = findDataP(atoi(command[1]), *L);
                     i = getDataP(p, *L);
-                    if(waitpid(atoi(command[1]), i->sig->num) != -1){
-                        if(WIFEXITED(i->sig->num){
-                            printf("Proceso %d terminado normalmente. Valor devuelto: %d\n", atoi(command[1]), WEXITSTATUS(i->sig->num));
-                            i->sig->name = "TERMINADO";
+                    if(waitpid(atoi(command[1]), i.sig.num, 0) != -1){
+                        if(WIFEXITED(i.sig.num)){
+                            printf("Proceso %d terminado normalmente. Valor devuelto: %d\n", atoi(command[1]), WEXITSTATUS(i.sig.num));
+                            i.sig.name = "TERMINADO";
                     }
-                    else if(WIFSIGNALED(i->sig->num){
-                        printf("Proceso %d terminado por la señal %d", atoi(command[1]), WTERMSIG(i->sig->num));
-                        i->sig->name = "SENALADO";
+                    else if(WIFSIGNALED(i.sig.num)){
+                        printf("Proceso %d terminado por la señal %d", atoi(command[1]), WTERMSIG(i.sig.num));
+                        i.sig.name = "SENALADO";
+                        }
                     }
-                    }
-
                 }
             }
         }        
@@ -177,7 +205,17 @@ void job(char ** command, int nargs, tListP *L){
 //-------------------------------------------------------------------------------------------
 
 //Aaron eres el fucking MVP
+char * getUser(uid_t uid){
+    struct passwd *contraseñaNombre;
+    contraseñaNombre = getpwuid(uid);
+    return contraseñaNombre->pw_name;
+}
 
+uid_t getMyuid(char * name){
+    struct passwd *contraseñaNombre;
+    contraseñaNombre = getpwnam(name);
+    return contraseñaNombre->pw_uid;
+}
 
 
 //-------------------------------------------------------------------------------------------
@@ -233,9 +271,9 @@ int CambiarVariable(char * var, char * valor, char *e[]) {
 int ValorSenal(char * sen){  /*devuelve el numero de senial a partir del nombre*/
 
     int i;
-    for (i=0; sigstrnum[i].nombre!=NULL; i++)
-        if (!strcmp(sen, sigstrnum[i].nombre))
-            return sigstrnum[i].senal;
+    for (i=0; sigstrnum[i].name!=NULL; i++)
+        if(!strcmp(sen, sigstrnum[i].name))
+            return sigstrnum[i].num;
     return -1;
 }
 
@@ -243,9 +281,9 @@ int ValorSenal(char * sen){  /*devuelve el numero de senial a partir del nombre*
 char *NombreSenal(int sen){  /*devuelve el nombre senal a partir de la senal*/
 			/* para sitios donde no hay sig2str*/
     int i;
-    for (i=0; sigstrnum[i].nombre!=NULL; i++)
-        if (sen==sigstrnum[i].senal)
-            return sigstrnum[i].nombre;
+    for (i=0; sigstrnum[i].name!=NULL; i++)
+        if (sen==sigstrnum[i].num)
+            return sigstrnum[i].name;
     return ("SIGUNKNOWN");
 }
 

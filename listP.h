@@ -1,5 +1,5 @@
-#ifndef PRACTICA_SO_LISTM_H
-#define PRACTICA_SO_LISTM_H
+#ifndef PRACTICA_SO_LISTP_H
+#define PRACTICA_SO_LISTP_H
 #define PNULL NULL
 #include "includes.h"
 
@@ -96,7 +96,7 @@ struct tNodeP{
 };
 typedef tPosP tListP;
 
-void initItem(tItemP *i, int pid,char * launch, char * status);
+void initItem(tItemP *i, int pid,char * launch, int status, int prio, char* user);
 void createEmptyListP(tListP *L);
 bool isEmptyListP(tListP L);
 tPosP firstP(tListP L);
@@ -105,9 +105,6 @@ tPosP nextP(tPosP P, tListP L);
 tPosP previousP(tPosP P, tListP L);
 tItemP getDataP(tPosP P, tListP L);
 tPosP findDataP(int I, tListP L);
-tPosP findKey(int I, tListP L);
-tPosP findFich(char *name, tListP L);
-tPosP findDir(void * add,tListP L);
 bool insertDataP(const tItemP i, tListP *L);
 void deleteAtPosP(tPosP p,tListP *L);
 void delListP(tListP *L);
