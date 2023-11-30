@@ -20,5 +20,6 @@
 #include <sys/mman.h>
 //Librerias P3
 #include "unistd.h"
+#include <sys/resource.h>
 
 #endif //P0_INCLUDES_H

@@ -31,27 +31,6 @@ void uid(char **command, int nargs){
     }
 }
 
-
-/*void uid(char **command, int nargs){
-    if(nargs > 2 && strcmp(command[1], "-set") == 0){
-        uid_t newuid;
-        if(strcmp(command[2], "-l") == 0){
-            newuid = getMyuid(command[3]);
-            if(seteuid(newuid) != 0){
-                perror("Usuario no existente: ");
-            }
-        }else{
-            newuid = atoi(command[2]);
-            if(seteuid(newuid) != 0){
-                perror("Imposible cambiar credencial: ");
-            }
-        }
-    }else{
-        printf("Credencial real: %d, (%s)\n", getuid(), getUser(getuid()));
-        printf("Credencial efectiva: %d, (%s)\n", geteuid(), getUser(geteuid()));
-    }
-}*/
-
 void showvar(char ** args){
     //Valor y direcciones de la variable de entorno
 }
@@ -147,7 +126,7 @@ void deljobs(char ** command, int nargs, tListP *L){
         tPosP p;
         tItemP i;
         if(strcmp(command[1], "-term") == 0){
-            for(p = L; p != PNULL; p = next(p, *L)){
+            for(p = *L; p != PNULL; p = nextP(p, *L)){
                 i = getDataP(p, *L);
                 if(strcmp("TERMINADO", i.sig.name) == 0){
                     deleteAtPosP(p, L);
@@ -155,7 +134,7 @@ void deljobs(char ** command, int nargs, tListP *L){
             }
         }
         if(strcmp(command[1], "-sig") == 0){
-            for(p = L; p != PNULL; p = next(p, *L)){
+            for(p = *L; p != PNULL; p = nextP(p, *L)){
                 i = getDataP(p, *L);
                 if(strcmp("SENALADO", i.sig.name) == 0){
                     deleteAtPosP(p, L);
@@ -184,7 +163,7 @@ void job(char ** command, int nargs, tListP *L){
                 if(strcmp(command[1], "-fg") == 0){
                     p = findDataP(atoi(command[1]), *L);
                     i = getDataP(p, *L);
-                    if(waitpid(atoi(command[1]), i.sig.num, 0) != -1){
+                    if(waitpid(atoi(command[2]), &i.sig.num, 0) != -1){
                         if(WIFEXITED(i.sig.num)){
                             printf("Proceso %d terminado normalmente. Valor devuelto: %d\n", atoi(command[1]), WEXITSTATUS(i.sig.num));
                             i.sig.name = "TERMINADO";
@@ -288,5 +267,5 @@ char *NombreSenal(int sen){  /*devuelve el nombre senal a partir de la senal*/
 }
 
 void Random(char ** args, int nargs){
-    execl(args[0],*args);
+    
 }

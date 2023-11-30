@@ -14,12 +14,12 @@ int main() {
     tList L;
     tListF F;
     tListM M;
-    tListM P;
+    tListP P;
 
     createEmptyList(&L);        //Creo la lista vacía
     createEmptyListF(&F);
     createEmptyListM(&M);
-    createEmptyListM(&P);
+    createEmptyListP(&P);
 
     while (fin == 0) {
         printf("\n--> ");                            //Printeo el prompt
