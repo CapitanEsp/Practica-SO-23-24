@@ -7,7 +7,7 @@
 
 
 ///valgrind --leak-check=full --show-leak-kinds=all ./p3
-int main() {
+int main(int nargs, char **argv, char **arg3) {
     int fin = 0, num;        //Creo la variable del bucle y la variable donde guardo en cuantas partes se divide el comando
     char t[TCOM];               //Variable donde guardo el comando sin dividir
     char *command[MAX];         //Array donde guardo el comando dividido
@@ -26,7 +26,7 @@ int main() {
         fgets(t, TCOM, stdin);                   //Guardo el comando escrito por teclado
         insertItem(t, &L);                          //Meto el comando en el historial
         num = partir(t, command);                  //Parto el comando
-        fin = processCommand(command, num, &L, &F,&M, &P);    //Proceso el comando y miro si el comando finaliza el bucle
+        fin = processCommand(command, num, &L, &F,&M, &P, arg3);   //Proceso el comando y miro si el comando finaliza el bucle
     }
     //Si se cierra el Shell se elimina el historial
     delListF(&F);

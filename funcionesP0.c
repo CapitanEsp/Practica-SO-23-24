@@ -23,7 +23,7 @@ int partir(char *inCommand, char *outCommand[]) {
     }
 }
 
-int processCommand(char *command[], int aux, tList *L, tListF *F,tListM * M, tListP *P) {
+int processCommand(char *command[], int aux, tList *L, tListF *F,tListM * M, tListP *P, char ** arg3) {
     if (aux > 0) {                                                      //Si el comando tiene contenido
         if (strcmp(command[0], "authors") == 0) {                      //Se comprueba que comando es comparando strings
             if (aux <= 2) {
@@ -63,7 +63,7 @@ int processCommand(char *command[], int aux, tList *L, tListF *F,tListM * M, tLi
             }
         } else if (strcmp(command[0], "comand") == 0) {
             if (aux == 2) {
-                comandoN(command, *L, *F,*M, *P);
+                comandoN(command, *L, *F,*M, *P, arg3);
             } else if (aux == 1) {
                 printf("Error: Introduce una N\n");
             } else printf("Error: Exceso de argumentos\n");
@@ -215,7 +215,7 @@ void hist(char **comand, int aux, tList *L) {
     }
 }
 
-void comandoN(char **comand, tList L, tListF F,tListM M, tListP P) {
+void comandoN(char **comand, tList L, tListF F,tListM M, tListP P, char** arg3) {
     int n, n2;
     char *comando;
     char *auxcmd[TCOM];
@@ -227,7 +227,7 @@ void comandoN(char **comand, tList L, tListF F,tListM M, tListP P) {
             printf("No se puede ejecutar comando comando\n");  //Se evita un bucle infinito
         } else {
             n2 = partir(comando, auxcmd);   //Si no, se parte el comando otra vez
-            processCommand(auxcmd, n2, &L, &F,&M, &P);      //y se procesa el comando de nuevo.
+            processCommand(auxcmd, n2, &L, &F,&M, &P, arg3);      //y se procesa el comando de nuevo.
         }
     } else {
         perror("Error: El argumento es incorrecto o el digito no es valido.");

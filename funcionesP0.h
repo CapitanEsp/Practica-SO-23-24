@@ -19,7 +19,7 @@
 
 //Funciones para tratar los comandos
 int partir(char *inCommand, char* outCommand[]);
-int processCommand(char* command[], int aux, tList* L,tListF *F,tListM *M, tListP *P);
+int processCommand(char* command[], int aux, tList* L,tListF *F,tListM *M, tListP *P, char ** arg3);
 
 //Funciones de los comandos en si
 void autores(char* Arg[], int aux);
@@ -28,7 +28,7 @@ void carpeta(char* Arg[], int aux);
 void fecha();
 void hora();
 void hist(char* Arg[], int aux, tList *L);
-void comandoN(char **comand, tList L, tListF F,tListM M, tListP P);
+void comandoN(char **comand, tList L, tListF F,tListM M, tListP P, char** arg3);
 void infosis();
 void ayuda(char* Arg[], int aux);
 void Cmd_open(char * Arg[],tListF *L);

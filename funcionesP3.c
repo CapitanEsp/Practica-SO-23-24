@@ -1,5 +1,7 @@
 #include "funcionesP3.h"
 
+extern char **varEnviroment;
+
 //-------------------------------------------------------------------------------------------
 //FUNCIONES PRINCIPALES (AARON HAGO LO QUE PUEDO)
 //-------------------------------------------------------------------------------------------
@@ -31,14 +33,24 @@ void uid(char **command, int nargs){
     }
 }
 
-void showvar(char ** args){
-    //Valor y direcciones de la variable de entorno
+void showvar(char ** command, int nargs, char ** arg3){
+    if(nargs == 1){
+        enviroment(arg3, "arg3 main");
+    }else{
+        int posInEnviro = BuscarVariable(command[1], arg3);
+        if(varPos != -1) {
+            printf("Con arg3 main %s(%p) @%p\n", arg3[posInEnviro], arg3[posInEnviro], arg3);
+            printf("Con environ %s(%p) @%p\n", varEnviroment[posInEnviro], varEnviroment[posInEnviro], varEnviroment);
+            printf("Con getenv %s(%p)\n", getenv(command[1]), getenv(command[1]));
+        }
+        else{
+            printf("No ejecutado: %s\n", strerror(errno));
+        }
+    }
 }
 
 void changevar(char ** command, int nargs){
-    if(nargs == 3){
-        //Cambia el valor de una variable de entorno
-    }else{
+    if(nargs == 4){
         if(nargs > 4 || nargs < 3){
             perror("Numero de parametros incorrecto");
         }
@@ -50,7 +62,9 @@ void changevar(char ** command, int nargs){
         }
         if(strcmp(command[1], "-p") == 0){
             //Hacer codigo
-        }                
+        }
+    }else{
+        perror("Numero de parametros incorrecto");
     }
 }
 
@@ -70,14 +84,19 @@ void subsvar(char ** command,int nargs){
     }
 }
 
-void showenv(char ** command,int nargs){
-    if(nargs == 2){
-        if(strcmp(command[1], "-environ") == 0){
-            //Hacer codigo
+void showenv(char ** command,int nargs, char** arg3){
+    if(nargs < 3){
+        if(nargs == 1){
+            enviroment(arg3, "arg3 main");
+        }else{
+            if(strcmp(command[1], "-environ") == 0){
+                enviroment(varEnviroment, "Enviroment");
+            }
+            if(strcmp(command[1], "-addr") == 0){
+                printf("environ:   %p (almacenado en %p)\n", varEnviroment, &varEnviroment);
+                printf("main arg3: %p (almacenado en %p)\n", arg3, &arg3);
+            }
         }
-        if(strcmp(command[1], "-addr") == 0){
-            //Hacer codigo
-        }     
     }else{
         perror("Numero de parametros incorrecto"); 
     }
@@ -196,6 +215,12 @@ uid_t getMyuid(char * name){
     return contraseñaNombre->pw_uid;
 }
 
+void enviroment(char **varEnviroment, char *enviromentName){
+    int p;
+    for(p = 0; env[p] != NULL; p++){
+        printf("%p -> %s [%d] = (%p) %s\n", &varEnviroment[p], enviromentName, p, varEnviroment[p], varEnviroment[p]);
+    }
+}
 
 //-------------------------------------------------------------------------------------------
 //CODIGO DE AYUDA
