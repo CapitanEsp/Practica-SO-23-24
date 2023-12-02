@@ -96,7 +96,7 @@ struct tNodeP{
 };
 typedef tPosP tListP;
 
-void initItem(tItemP *i, int pid,char * launch, int status, int prio, char* user);
+void initItem(tItemP *i, int pid,int status, int prio, char* user);
 void createEmptyListP(tListP *L);
 bool isEmptyListP(tListP L);
 tPosP firstP(tListP L);

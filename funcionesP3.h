@@ -20,5 +20,9 @@ void Random(char ** command,int nargs);
 //Func aux
 char * getUser(uid_t uid);
 uid_t getMyuid(char * name);
+void enviroment(char ** enviroment,char * envName);
+
+//Func cod ayuda
+int BuscarVariable (char * var, char *e[]);
 
 #endif //P3_SO_24_FUNCIONESP3_H

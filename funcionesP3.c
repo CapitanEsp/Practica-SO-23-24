@@ -38,7 +38,7 @@ void showvar(char ** command, int nargs, char ** arg3){
         enviroment(arg3, "arg3 main");
     }else{
         int posInEnviro = BuscarVariable(command[1], arg3);
-        if(varPos != -1) {
+        if(posInEnviro != -1) {
             printf("Con arg3 main %s(%p) @%p\n", arg3[posInEnviro], arg3[posInEnviro], arg3);
             printf("Con environ %s(%p) @%p\n", varEnviroment[posInEnviro], varEnviroment[posInEnviro], varEnviroment);
             printf("Con getenv %s(%p)\n", getenv(command[1]), getenv(command[1]));
@@ -49,7 +49,7 @@ void showvar(char ** command, int nargs, char ** arg3){
     }
 }
 
-void changevar(char ** command, int nargs){
+void changevar(char ** command, int nargs,char ** args3){
     if(nargs == 4){
         if(nargs > 4 || nargs < 3){
             perror("Numero de parametros incorrecto");
@@ -68,7 +68,7 @@ void changevar(char ** command, int nargs){
     }
 }
 
-void subsvar(char ** command,int nargs){
+void subsvar(char ** command,int nargs,char ** args3){
     if(nargs == 4){
         //Hacer codigo
     }else{
@@ -217,7 +217,7 @@ uid_t getMyuid(char * name){
 
 void enviroment(char **varEnviroment, char *enviromentName){
     int p;
-    for(p = 0; env[p] != NULL; p++){
+    for(p = 0; varEnviroment[p] != NULL; p++){
         printf("%p -> %s [%d] = (%p) %s\n", &varEnviroment[p], enviromentName, p, varEnviroment[p], varEnviroment[p]);
     }
 }
@@ -292,5 +292,24 @@ char *NombreSenal(int sen){  /*devuelve el nombre senal a partir de la senal*/
 }
 
 void Random(char ** args, int nargs){
-    
+    pid_t pid;
+    tItemP i;
+    char * comando = args[0];
+
+    if(args[nargs-1][0]== '&'){
+        for(int j = 0;j<nargs-1;j++){
+            snprintf(comando,500," %s",args[j]);
+        }
+
+        pid = fork();
+        if(pid == 0){//Proceso hijo background
+            system(comando);
+        }
+        else if (pid > 0){
+//            initItem(&i,pid,0, getpriority(pid,PRIO_PROCESS), getUser(geteuid()));
+            printf("Ejecutando: %s en el proceso %d\n",comando, pid);
+        }
+        else perror("Error no se pudo crear el proceso");
+    }
+    else system(comando);
 }

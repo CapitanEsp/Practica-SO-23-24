@@ -131,7 +131,7 @@ int processCommand(char *command[], int aux, tList *L, tListF *F,tListM * M, tLi
             } else {
                 printf("Error: Exceso de argumentos\n");
             }
-        } else printf("Error: El comando no es correcto\n");
+        } else Random(command,aux);
     }
     return 0;
 }
