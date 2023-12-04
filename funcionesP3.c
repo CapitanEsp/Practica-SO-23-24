@@ -1,5 +1,7 @@
 #include "funcionesP3.h"
 #include "includes.h"
+#include "funcionesP2.h"
+
 
 //-------------------------------------------------------------------------------------------
 //FUNCIONES PRINCIPALES (AARON HAGO LO QUE PUEDO)
@@ -142,13 +144,25 @@ char *Ejecutable(char *s) {
     return s;
 }
 
-void exec(char ** args,int nargs){ //Execv, execve, execl
-    int i;
-    char arguments[nargs][100],comando[100];
-    for(i=1;i<nargs;i++) strcpy(arguments[i-1], args[i]);
-    strcpy(comando, Ejecutable(args[1]));
-    *arguments[nargs] = NULL;
-    execv(comando,arguments);
+void exec(char ** args,int nargs,int init){ //Execv, execve, execl
+    int i=1;
+    char * arguments[nargs],*argu2[nargs+1];
+    char comando[100];
+
+    if(init>=0) i = init;
+    strcpy(comando, Ejecutable(args[i]));
+    for(;i<nargs;i++) {
+        if(init == -1)arguments[i-1] = strdup(args[i]);
+        else argu2[i] = strdup(args[i]);
+    }
+    if(init==-1){
+        arguments[nargs-1]=NULL;
+        execv(comando,arguments);
+    }
+    else{
+        argu2[nargs] = NULL;
+        execv(comando,argu2);
+    }
 }
 
 
@@ -208,9 +222,13 @@ void job(char ** command, int nargs, tListP *L){
             tPosP p;
             tItemP i;
             if(nargs == 2){
-                p = findDataP(atoi(command[1]), *L);
-                i = getDataP(p, *L);
-                printf("%d\t%s p=%d %s %s (%d) %s", i.pid, i.user, i.prio, i.launch, i.sig.name, i.sig.num, i.comandName);
+                if(atoi(command[1]) !=  getpid()){
+                    p = findDataP(atoi(command[1]), *L);
+                    i = getDataP(p, *L);
+                    printf("%d\t%s p=%d %s %s (%d) %s", i.pid, i.user, i.prio, i.launch, i.sig.name, i.sig.num, i.comandName);
+                }else{  
+                    jobs(command, nargs, *L);
+                }
             }else{
                 if(strcmp(command[1], "-fg") == 0){
                     p = findDataP(atoi(command[1]), *L);
@@ -230,6 +248,21 @@ void job(char ** command, int nargs, tListP *L){
         }        
     }
 }
+
+void Random(char ** args, int nargs,tListP * L){
+    pid_t pid;
+    pid = fork(); // Crea un hijo
+        if(pid==0){exec(args,nargs-1,0);} // Ejecuta el comando en backgrounfd
+        else if(pid>0 && args[nargs-1][0]!='&') waitpid(pid,NULL,0);
+        else if(pid>0 && args[nargs-1][0]!='&'){
+            tItemP i;
+            getHora(i.launch);
+            initItem(&i, pid, i.launch, 0, getpriority(PRIO_PROCESS, pid), getUser(getuid()));
+            insertDataP(i, L);
+        }
+         //Ejecuciones en foreground
+}
+
 
 //-------------------------------------------------------------------------------------------
 //FUNCIONES AUXILIARES
@@ -341,6 +374,3 @@ char *NombreSenal(int sen){  /*devuelve el nombre senal a partir de la senal*/
     return ("SIGUNKNOWN");
 }
 
-void Random(char ** args, int nargs){
-    
-}
