@@ -11,8 +11,8 @@ void initItem(tItemP *i, int pid,char * launch, int status, int prio, char* user
     strcpy(i->launch, launch);
     i->prio = prio;
     i->sig.num = status;
-    strcpy(i->sig.name, sigstrnum[i->sig.num].name);
-    strcpy(i->user, user);
+    //strcpy(i->sig.name, sigstrnum[i->sig.num].name);
+    i->user= user;
 
 }
 

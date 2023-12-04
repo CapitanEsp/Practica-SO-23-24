@@ -172,7 +172,7 @@ void jobs(char ** command,int nargs, tListP L){
     for(p = L; p != PNULL; p = nextP(p, L)){
         data = getDataP(p, L);
         data.prio = getpriority(data.prio, data.pid);
-        data.sig.num = waitpid(data.pid, PNULL, 0);
+        //data.sig.num = waitpid(data.pid, PNULL, 0);
         if(waitpid(data.pid, &data.sig.num, WNOHANG | WUNTRACED | WCONTINUED) == data.pid){
             if (WIFEXITED(data.sig.num)) {
                 strcpy(data.sig.name, "TERMINADO");
@@ -183,7 +183,7 @@ void jobs(char ** command,int nargs, tListP L){
             } else if (WIFCONTINUED(data.sig.num))
                 strcpy(data.sig.name, "ACTIVO");
         }
-        printf("%d\t%s p=%d %s %s (%d) %s", data.pid, data.user, data.prio, data.launch, data.sig.name, data.sig.num, data.comandName);
+        printf("%d\t%s p=%d %s  %s", data.pid, data.user, data.prio, data.launch, /*data.sig.name, data.sig.num,*/ data.comandName);
     }
 }
 
@@ -252,15 +252,20 @@ void job(char ** command, int nargs, tListP *L){
 void Random(char ** args, int nargs,tListP * L){
     pid_t pid;
     pid = fork(); // Crea un hijo
-        if(pid==0){exec(args,nargs-1,0);} // Ejecuta el comando en backgrounfd
-        else if(pid>0 && args[nargs-1][0]!='&') waitpid(pid,NULL,0);
-        else if(pid>0 && args[nargs-1][0]!='&'){
+        if(pid==0){exec(args,nargs-1,0);} // Ejecuta el comando en background
+        else if(pid>0 && args[nargs-1][0]=='&'){
+            char comand[500];
             tItemP i;
             getHora(i.launch);
+            for(int j=0;j<nargs-1;j++){
+                strcat(comand,args[j]);
+                strcat(comand," ");
+            }
             initItem(&i, pid, i.launch, 0, getpriority(PRIO_PROCESS, pid), getUser(getuid()));
+            i.comandName=strdup(comand);
             insertDataP(i, L);
         }
-         //Ejecuciones en foreground
+        else if(pid>0 && args[nargs-1][0]!='&') waitpid(pid,NULL,0); //Ejecuciones en foreground
 }
 
 
