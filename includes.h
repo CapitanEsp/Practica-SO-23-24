@@ -22,4 +22,6 @@
 #include "unistd.h"
 #include <sys/resource.h>
 
+extern char **varEnviroment;
+
 #endif //P0_INCLUDES_H

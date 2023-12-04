@@ -5,14 +5,13 @@
             Antón Soto Ríos - anton.soto@udc.es**/
 
 #include "listP.h"
-#include "funcionesP2.h"
 
-void initItem(tItemP *i, int pid, int status, int prio, char* user){
+void initItem(tItemP *i, int pid,char * launch, int status, int prio, char* user){
     i->pid = pid;
-    getHora(i->launch);
+    strcpy(i->launch, launch);
     i->prio = prio;
     i->sig.num = status;
-    strcpy(i->sig.name, sigstrnum[status].name);
+    strcpy(i->sig.name, sigstrnum[i->sig.num].name);
     strcpy(i->user, user);
 
 }

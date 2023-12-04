@@ -120,6 +120,8 @@ int processCommand(char *command[], int aux, tList *L, tListF *F,tListM * M, tLi
             my_Fork(command,aux);
         }  else if (strcmp(command[0], "uid") == 0) {
             uid(command,aux);
+        }else if (strcmp(command[0], "exec") == 0) {
+            exec(command,aux);
         }
         else if (strcmp(command[0], "pmap") == 0) {
             Do_MemPmap();
@@ -131,7 +133,7 @@ int processCommand(char *command[], int aux, tList *L, tListF *F,tListM * M, tLi
             } else {
                 printf("Error: Exceso de argumentos\n");
             }
-        } else Random(command,aux);
+        } else Random(command, aux);
     }
     return 0;
 }

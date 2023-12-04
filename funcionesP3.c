@@ -1,6 +1,5 @@
 #include "funcionesP3.h"
-
-extern char **varEnviroment;
+#include "includes.h"
 
 //-------------------------------------------------------------------------------------------
 //FUNCIONES PRINCIPALES (AARON HAGO LO QUE PUEDO)
@@ -49,38 +48,47 @@ void showvar(char ** command, int nargs, char ** arg3){
     }
 }
 
-void changevar(char ** command, int nargs,char ** args3){
+void changevar(char ** command,int nargs, char** arg3){
     if(nargs == 4){
-        if(nargs > 4 || nargs < 3){
-            perror("Numero de parametros incorrecto");
-        }
         if(strcmp(command[1], "-a") == 0){
-            //Hacer codigo
-        }
-        if(strcmp(command[1], "-e") == 0){
-            //Hacer codigo
-        }
-        if(strcmp(command[1], "-p") == 0){
-            //Hacer codigo
+            if(CambiarVariable(command[2], command[3], arg3) == -1){
+                printf("Imposible cambiar variable: %s\n", strerror(errno));
+            }
+        }else if(strcmp(command[1], "-e") == 0){
+            if(CambiarVariable(command[2], command[3], varEnviroment) == -1){
+                printf("Imposible cambiar variable: %s\n", strerror(errno));
+            }
+        }else if(strcmp(command[1], "-p") == 0){
+            char newVar[500];
+            strcpy(newVar, command[2]);
+            strcat(newVar, "=");
+            strcat(newVar, command[3]);
+            if(putenv(newVar) != 0){
+                printf("Imposible cambiar variable: %s\n", strerror(errno));
+            }
+        }else{
+            perror("Formato de parametros incorrecto");
         }
     }else{
         perror("Numero de parametros incorrecto");
     }
 }
 
-void subsvar(char ** command,int nargs,char ** args3){
-    if(nargs == 4){
-        //Hacer codigo
-    }else{
-        if(nargs > 5 || nargs < 4){
-            perror("Numero de parametros incorrecto");
-        }
+void subsvar(char ** command,int nargs, char** arg3){
+    if(nargs == 5){
         if(strcmp(command[1], "-a") == 0){
-            //Hacer codigo
+            if(CambiarVariablebyAntonetiiii(command[2], command[3], command[4], arg3) == -1){
+                printf("Imposible cambiar variable: %s\n", strerror(errno));
+            }
+        }else if(strcmp(command[1], "-e") == 0){
+            if(CambiarVariablebyAntonetiiii(command[2], command[3], command[4], varEnviroment) == -1){
+                printf("Imposible cambiar variable: %s\n", strerror(errno));
+            }
+        }else{
+            perror("Formato de parametros incorrecto");
         }
-        if(strcmp(command[1], "-e") == 0){
-            //Hacer codigo
-        }                
+    }else{
+         perror("Numero de parametros incorrecto");               
     }
 }
 
@@ -116,7 +124,32 @@ void my_Fork(char ** command,int nargs){
     }
 }
 
-//void exec(char ** args,int nargs); //Acabo de ver el shell de referencia y me quede como estaba o peor
+char *Ejecutable(char *s) {
+    char path[PATH_MAX];
+    static char aux2[PATH_MAX];
+    struct stat st;
+    char *p;
+    if (s == NULL || (p = getenv("PATH")) == NULL)
+        return s;
+    if (s[0] == '/' || !strncmp(s, "./", 2) || !strncmp(s, "../", 3))
+        return s;       //is an absolute pathname
+    strncpy(path, p, PATH_MAX);
+    for (p = strtok(path, ":"); p != NULL; p = strtok(NULL, ":")) {
+        sprintf(aux2, "%s/%s", p, s);
+        if (lstat(aux2, &st) != -1)
+            return aux2;
+    }
+    return s;
+}
+
+void exec(char ** args,int nargs){ //Execv, execve, execl
+    int i;
+    char arguments[nargs][100],comando[100];
+    for(i=1;i<nargs;i++) strcpy(arguments[i-1], args[i]);
+    strcpy(comando, Ejecutable(args[1]));
+    *arguments[nargs] = NULL;
+    execv(comando,arguments);
+}
 
 
 void jobs(char ** command,int nargs, tListP L){
@@ -222,6 +255,23 @@ void enviroment(char **varEnviroment, char *enviromentName){
     }
 }
 
+int CambiarVariablebyAntonetiiii(char * var1, char *var2, char * valor, char *e[]){
+    /*cambia una variable en el entorno que se le pasa como parámetro*/
+    /*lo hace directamente, no usa putenv*/
+    int pos;
+    char *aux;
+
+    if ((pos=BuscarVariable(var1,e))==-1)
+        return(-1);
+
+    if ((aux=(char *)malloc(strlen(var2)+strlen(valor)+2))==NULL)
+        return -1;
+    strcpy(aux,var2);
+    strcat(aux,"=");
+    strcat(aux,valor);
+    e[pos]= aux;
+    return (pos);
+}
 //-------------------------------------------------------------------------------------------
 //CODIGO DE AYUDA
 //-------------------------------------------------------------------------------------------
@@ -254,7 +304,7 @@ int BuscarVariable (char * var, char *e[])  /*busca una variable en el entorno q
 }
 
 
-int CambiarVariable(char * var, char * valor, char *e[]) {
+int CambiarVariable(char * var, char * valor, char *e[]){
     /*cambia una variable en el entorno que se le pasa como parámetro*/
     /*lo hace directamente, no usa putenv*/
     int pos;
@@ -292,24 +342,5 @@ char *NombreSenal(int sen){  /*devuelve el nombre senal a partir de la senal*/
 }
 
 void Random(char ** args, int nargs){
-    pid_t pid;
-    tItemP i;
-    char * comando = args[0];
-
-    if(args[nargs-1][0]== '&'){
-        for(int j = 0;j<nargs-1;j++){
-            snprintf(comando,500," %s",args[j]);
-        }
-
-        pid = fork();
-        if(pid == 0){//Proceso hijo background
-            system(comando);
-        }
-        else if (pid > 0){
-//            initItem(&i,pid,0, getpriority(pid,PRIO_PROCESS), getUser(geteuid()));
-            printf("Ejecutando: %s en el proceso %d\n",comando, pid);
-        }
-        else perror("Error no se pudo crear el proceso");
-    }
-    else system(comando);
+    
 }
