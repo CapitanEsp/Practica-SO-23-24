@@ -64,12 +64,13 @@ void changevar(char **command, int nargs, char **arg3) {
             if (CambiarVariable(command[2], command[3], varEnviroment) == -1) {
                 printf("Imposible cambiar variable: %s\n", strerror(errno));
             }
-        } else if (strcmp(command[1], "-p") == 0) {
-            char newVar[500] = "";
+        }else if (strcmp(command[1], "-p") == 0) {
+            char newVar[500];
             strcpy(newVar, command[2]);
             strcat(newVar, "=");
             strcat(newVar, command[3]);
-            if (putenv(newVar) != 0) {
+            int aux = putenv(newVar);
+            if (aux != 0) {
                 printf("Imposible cambiar variable: %s\n", strerror(errno));
             }
         } else {
@@ -201,11 +202,16 @@ void deljobs(char **command, int nargs, tListP *L) {
     if (nargs == 2) {
         tPosP p;
         tItemP i;
+        tPosP aux;
         if (strcmp(command[1], "-term") == 0) {
-            for (p = firstP(*L); p != PNULL; p = nextP(p, *L)) {
-                i = getDataP(p, *L);
+            for (aux= firstP(*L); aux != PNULL; aux = p) {
+                printf("Empiezo el bucle\n");
+                i = getDataP(aux, *L);
+                p = nextP(aux, *L);
+                printf("Pillo los datos\n");
                 if (strcmp("TERMINADO", i.nsignal) == 0) {
-                    deleteAtPosP(p, L);
+                    deleteAtPosP(aux, L);
+                    printf("Elimino la posicion\n");
                 }
             }
         }
@@ -312,10 +318,20 @@ uid_t getMyuid(char *name) {
 }
 
 void enviroment(char **varEnviroment, char *enviromentName) {
-    int p = 0;
-    for (; varEnviroment[p] != NULL; p++) {
-        printf("%p -> %s [%d] = (%p) %s\n", &varEnviroment[p], enviromentName, p, varEnviroment[p], varEnviroment[p]);
+    for (int p = 0; varEnviroment[p] != NULL; p++) {
+        //printf("%p -> %s [%d] = (%p) %s\n", &varEnviroment[p], enviromentName, p, varEnviroment[p], varEnviroment[p]);
+        printf("%p -> ", &varEnviroment[p]);
+        printf("%s ", enviromentName);
+        printf("[%d] = ", p);
+        printf("(%p) ", varEnviroment[p]);
+        printf("%s\n", varEnviroment[p]);
     }
+  /*int p = 0;
+    for (char **env = varEnviroment; *env != 0; env++){
+        char *thisEnv = *env;
+        printf("%p -> %s [%d] = (%p) %s\n", &thisEnv, enviromentName, p, thisEnv, thisEnv);  
+        p++;
+  }*/
 }
 
 int CambiarVariablebyAntonetiiii(char *var1, char *var2, char *valor, char *e[]) {
@@ -332,8 +348,9 @@ int CambiarVariablebyAntonetiiii(char *var1, char *var2, char *valor, char *e[])
     strcpy(aux, var2);
     strcat(aux, "=");
     strcat(aux, valor);
-    e[pos] = aux;
-    return (pos);
+    strcpy(e[pos], aux);
+    free(aux);
+    return pos;
 }
 //-------------------------------------------------------------------------------------------
 //CODIGO DE AYUDA
@@ -380,8 +397,8 @@ int CambiarVariable(char *var, char *valor, char *e[]) {
     strcpy(aux, var);
     strcat(aux, "=");
     strcat(aux, valor);
-    e[pos] = aux;
-
+    strcpy(e[pos], aux);
+    free(aux);
     return (pos);
 }
 
