@@ -83,8 +83,8 @@ static struct SEN sigstrnum[]={
 
 typedef struct {
     int pid, prio;
-    char * user;
-    char * comandName;
+    char user[100];
+    char comandName[500];
     char launch[100];
     int signal;
     char nsignal[50];

@@ -131,7 +131,7 @@ int processCommand(char *command[], int aux, tList *L, tListF *F,tListM * M, tLi
         }else if (strcmp(command[0], "showenv") == 0) {
             showenv(command,aux,arg3);
         }else if (strcmp(command[0], "jobs") == 0) {
-            jobs(command,aux, *P);
+            jobs(command,aux, P);
         }else if (strcmp(command[0], "deljobs") == 0) {
             deljobs(command,aux, P);
         }else if (strcmp(command[0], "job") == 0) {

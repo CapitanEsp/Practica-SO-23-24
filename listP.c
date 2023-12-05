@@ -11,7 +11,7 @@ void initItem(tItemP *i, int pid,int prio, char* user){
     i->prio = prio;
     i->signal = 0;
     strcpy(i->nsignal, "ACTIVO");
-    i->user= user;
+    strcpy(i->user, user);
 
 }
 
@@ -72,7 +72,7 @@ bool insertDataP(const tItemP i, tListP *L){
         q->next=PNULL;
         if(*L==PNULL)*L=q;
         else{
-            for (p = *L; p->next != PNULL; p = p->next);
+            for (p = firstP(*L); p->next != PNULL; p = nextP(p, *L));
             p->next = q;
         }
     }
