@@ -139,11 +139,10 @@ int processCommand(char *command[], int aux, tList *L, tListF *F,tListM * M, tLi
         }
         else if (strcmp(command[0], "pmap") == 0) {
             Do_MemPmap();
-        }            else if ((strcmp(command[0], "quit") == 0) || (strcmp(command[0], "bye") == 0) ||
-                (strcmp(command[0], "exit") ==
-                    0)) {                                     //Como hacen lo mismo se comprueban juntos
+        }else if ((strcmp(command[0], "quit") == 0) || (strcmp(command[0], "bye") == 0) ||
+                (strcmp(command[0], "exit") == 0)) { //Como hacen lo mismo se comprueban juntos
             if (aux <= 2) {
-                return 1;                                                                  //Devuelve 1 para terminar el bucle en el main
+                return 1;                           //Devuelve 1 para terminar el bucle en el main
             } else {
                 printf("Error: Exceso de argumentos\n");
             }

@@ -86,7 +86,8 @@ typedef struct {
     char * user;
     char * comandName;
     char launch[100];
-    struct SEN sig;
+    int signal;
+    char nsignal[50];
 }tItemP;
 
 typedef struct tNodeP* tPosP;
@@ -96,7 +97,7 @@ struct tNodeP{
 };
 typedef tPosP tListP;
 
-void initItem(tItemP *i, int pid,char * launch, int status, int prio, char* user);
+void initItem(tItemP *i, int pid, int prio, char* user);
 void createEmptyListP(tListP *L);
 bool isEmptyListP(tListP L);
 tPosP firstP(tListP L);

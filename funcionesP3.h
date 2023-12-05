@@ -28,5 +28,5 @@ int CambiarVariablebyAntonetiiii(char * var1, char *var2, char * valor, char *e[
 //Codigo de ayuda
 int BuscarVariable (char * var, char *e[]);
 int CambiarVariable(char * var, char * valor, char *e[]);
-
+char *NombreSenal(int sen);
 #endif //P3_SO_24_FUNCIONESP3_H

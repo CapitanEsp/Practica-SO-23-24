@@ -6,12 +6,11 @@
 
 #include "listP.h"
 
-void initItem(tItemP *i, int pid,char * launch, int status, int prio, char* user){
+void initItem(tItemP *i, int pid,int prio, char* user){
     i->pid = pid;
-    strcpy(i->launch, launch);
     i->prio = prio;
-    i->sig.num = status;
-    //strcpy(i->sig.name, sigstrnum[i->sig.num].name);
+    i->signal = 0;
+    strcpy(i->nsignal, "ACTIVO");
     i->user= user;
 
 }

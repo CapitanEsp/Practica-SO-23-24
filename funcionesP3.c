@@ -169,21 +169,33 @@ void exec(char ** args,int nargs,int init){ //Execv, execve, execl
 void jobs(char ** command,int nargs, tListP L){
     tPosP p;
     tItemP data;
-    for(p = L; p != PNULL; p = nextP(p, L)){
+    int aux;
+    pid_t pid;
+    for(p = L; p != PNULL; p = nextP(p, L)) {
         data = getDataP(p, L);
-        data.prio = getpriority(data.prio, data.pid);
-        //data.sig.num = waitpid(data.pid, PNULL, 0);
-        if(waitpid(data.pid, &data.sig.num, WNOHANG | WUNTRACED | WCONTINUED) == data.pid){
-            if (WIFEXITED(data.sig.num)) {
-                strcpy(data.sig.name, "TERMINADO");
-            } else if (WIFSIGNALED(data.sig.num)) {
-                strcpy(data.sig.name, "SENALADO");
-            } else if (WIFSTOPPED(data.sig.num)) {
-                strcpy(data.sig.name, "STOPPED");
-            } else if (WIFCONTINUED(data.sig.num))
-                strcpy(data.sig.name, "ACTIVO");
+        if ((strcmp(data.nsignal, "TERMINADO") != 0) && (strcmp(data.nsignal, "SENALADO") != 0)) {
+            data.prio = getpriority(data.prio, data.pid);
+            aux = waitpid(data.pid, &pid, WNOHANG | WCONTINUED | WUNTRACED);
+            if (aux != -1) {
+                if(aux==data.pid){
+                if (WIFSIGNALED(pid)) {
+                    strcpy(data.nsignal, "SENALADO");
+                    data.signal = WTERMSIG(pid);
+                } else {
+                    if (WIFEXITED(pid)) {
+                        strcpy(data.nsignal, "TERMINADO");
+                        data.signal = WEXITSTATUS(pid);
+                    } else if (WIFSTOPPED(pid)) {
+                        strcpy(data.nsignal, "PARADO");
+                        data.signal = WSTOPSIG(pid);
+                    }
+                }
+            }
         }
+        p->data = data;
+    }
         printf("%d\t%s p=%d %s  %s", data.pid, data.user, data.prio, data.launch, /*data.sig.name, data.sig.num,*/ data.comandName);
+        printf("%d %s\n",data.signal,data.nsignal);
     }
 }
 
@@ -194,7 +206,7 @@ void deljobs(char ** command, int nargs, tListP *L){
         if(strcmp(command[1], "-term") == 0){
             for(p = *L; p != PNULL; p = nextP(p, *L)){
                 i = getDataP(p, *L);
-                if(strcmp("TERMINADO", i.sig.name) == 0){
+                if(strcmp("TERMINADO", i.nsignal) == 0){
                     deleteAtPosP(p, L);
                 }
             }
@@ -202,7 +214,7 @@ void deljobs(char ** command, int nargs, tListP *L){
         if(strcmp(command[1], "-sig") == 0){
             for(p = *L; p != PNULL; p = nextP(p, *L)){
                 i = getDataP(p, *L);
-                if(strcmp("SENALADO", i.sig.name) == 0){
+                if(strcmp("SENALADO", i.nsignal) == 0){
                     deleteAtPosP(p, L);
                 }
             }
@@ -225,7 +237,7 @@ void job(char ** command, int nargs, tListP *L){
                 if(atoi(command[1]) !=  getpid()){
                     p = findDataP(atoi(command[1]), *L);
                     i = getDataP(p, *L);
-                    printf("%d\t%s p=%d %s %s (%d) %s", i.pid, i.user, i.prio, i.launch, i.sig.name, i.sig.num, i.comandName);
+                    printf("%d\t%s p=%d %s %s (%d) %s", i.pid, i.user, i.prio, i.launch, i.nsignal, i.signal, i.comandName);
                 }else{  
                     jobs(command, nargs, *L);
                 }
@@ -233,14 +245,14 @@ void job(char ** command, int nargs, tListP *L){
                 if(strcmp(command[1], "-fg") == 0){
                     p = findDataP(atoi(command[1]), *L);
                     i = getDataP(p, *L);
-                    if(waitpid(atoi(command[2]), &i.sig.num, 0) != -1){
-                        if(WIFEXITED(i.sig.num)){
-                            printf("Proceso %d terminado normalmente. Valor devuelto: %d\n", atoi(command[1]), WEXITSTATUS(i.sig.num));
-                            i.sig.name = "TERMINADO";
+                    if(waitpid(atoi(command[2]), &i.signal, 0) != -1){
+                        if(WIFEXITED(i.signal)){
+                            printf("Proceso %d terminado normalmente. Valor devuelto: %d\n", atoi(command[1]), WEXITSTATUS(i.signal));
+                            //i.sig.name = "TERMINADO";
                     }
-                    else if(WIFSIGNALED(i.sig.num)){
-                        printf("Proceso %d terminado por la señal %d", atoi(command[1]), WTERMSIG(i.sig.num));
-                        i.sig.name = "SENALADO";
+                    else if(WIFSIGNALED(i.signal)){
+                        printf("Proceso %d terminado por la señal %d", atoi(command[1]), WTERMSIG(i.signal));
+                        //i.sig.name = "SENALADO";
                         }
                     }
                 }
@@ -261,7 +273,7 @@ void Random(char ** args, int nargs,tListP * L){
                 strcat(comand,args[j]);
                 strcat(comand," ");
             }
-            initItem(&i, pid, i.launch, 0, getpriority(PRIO_PROCESS, pid), getUser(getuid()));
+            initItem(&i, pid, getpriority(PRIO_PROCESS, pid), getUser(getuid()));
             i.comandName=strdup(comand);
             insertDataP(i, L);
         }
