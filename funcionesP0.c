@@ -121,7 +121,7 @@ int processCommand(char *command[], int aux, tList *L, tListF *F,tListM * M, tLi
         }  else if (strcmp(command[0], "uid") == 0) {
             uid(command,aux);
         }else if (strcmp(command[0], "exec") == 0) {
-            exec(command,aux, -1);
+            exec(command,aux);
         }else if (strcmp(command[0], "showvar") == 0) {
             showvar(command,aux,arg3);
         }else if (strcmp(command[0], "changevar") == 0) {
