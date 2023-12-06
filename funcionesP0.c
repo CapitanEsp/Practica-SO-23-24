@@ -353,9 +353,38 @@ void ayuda(char **command, int aux) {
         "\t[-vars]: Muestra las direcciones de las variables asignadas\n"
         "\t[-pmap]: Muestra la salida del comando pmap\n"
         "\t[-all]: Muestra todo lo nombrado anteriormente\n");                                
-    }else if (strcmp(command[1], "quit") == 0) {
-        printf("quit: Termina la ejecución del shell.\n");
-    } else if (strcmp(command[1], "exit") == 0) {
+    }else if (strcmp(command[1], "uid") == 0) {
+        printf("uid [-get|set] [-l] [id] Accede a las credenciales del proceso que ejecuta la shell.\n"
+               "\t[-get]: muestra las credenciales\n"
+               "\t[-set] id: establece la credencial al valor numerico id\n"
+               "\t[-set] -l id: establece la credencial al login id\n");
+    }else if (strcmp(command[1], "showvar") == 0) {
+        printf("showvar var: Muestra el valor y las direcciones de la variable de entorno var.\n");
+    }else if (strcmp(command[1], "changevar") == 0) {
+        printf("changevar [-a|-e|-p] var valor: Cambia el valor de una variable de entorno.\n"
+               "\t[-a]: accede por el tercer argumento del main\n"
+               "\t[-e]: accede mediante environ\n"
+               "\t[-p]: aacede mediante putenv\n");
+    }else if (strcmp(command[1], "subsvar") == 0) {
+        printf("subsvar [-a|-e] var1 var2 valor: Sustituye la variable de entorno var1 con var2=valor.\n"
+               "\t[-a]: accede por el tercer argumento del main\n"
+               "\t[-e]: accede mediante environ\n");
+    }else if (strcmp(command[1], "showvar") == 0) {
+        printf("showvar var: Muestra el valor y las direcciones de la variable de entorno var.\n");
+    }else if (strcmp(command[1], "fork") == 0) {
+        printf("fork: El shell hace fork y queda en espera a que su hijo termine.\n");
+    }else if (strcmp(command[1], "exec") == 0) {
+        printf("exec prog args: Ejecuta ,sin crear un proceso, el programa prog con sus argumentos args.\n");
+    }else if (strcmp(command[1], "jobs") == 0) {
+        printf("jobs: Lista los procesos en segundo plano.\n");
+    }else if (strcmp(command[1], "deljobs") == 0) {
+        printf("deljobs [-term|-sig]: Elimina los procesos de la lista.\n"
+               "\t[-term]: los terminados\n"
+               "\t[-sig]: los terminados por senal\n");
+    }else if (strcmp(command[1], "job") == 0) {
+        printf("job [-fg] pid: Muestra informacion del proceso pid.\n"
+               "\t[-fg] pid: pasa el proceso pid a primer plano\n");
+    }else if (strcmp(command[1], "exit") == 0) {
         printf("exit: Termina la ejecución del shell.\n");
     } else if (strcmp(command[1], "bye") == 0) {
         printf("bye: Termina la ejecución del shell.\n");

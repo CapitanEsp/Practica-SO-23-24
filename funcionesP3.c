@@ -183,6 +183,7 @@ void print_job(tItemP *data) {
             }
         }
     }
+    if(data->signal == 15)strcpy(data->nsignal,"SENALADO");
     printf("%d\t%s p=%d %s  %s", data->pid, data->user, data->prio, data->launch, /*data->sig.name, data->sig.num,*/
            data->comandName);
     printf("%d %s\n", data->signal, data->nsignal);
