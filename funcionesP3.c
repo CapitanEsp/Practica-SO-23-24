@@ -182,9 +182,7 @@ void print_job(tItemP *data) {
                 }
             }
         }
-    }
-    if(data->signal == 15)strcpy(data->nsignal,"SENALADO");
-    printf("%d\t%s p=%d %s  %s", data->pid, data->user, data->prio, data->launch, /*data->sig.name, data->sig.num,*/
+    }printf("%d\t%s p=%d %s  %s", data->pid, data->user, data->prio, data->launch, /*data->sig.name, data->sig.num,*/
            data->comandName);
     printf("%d %s\n", data->signal, data->nsignal);
 }
@@ -206,21 +204,19 @@ void deljobs(char **command, int nargs, tListP *L) {
         tPosP aux;
         if (strcmp(command[1], "-term") == 0) {
             for (aux= firstP(*L); aux != PNULL; aux = p) {
-                printf("Empiezo el bucle\n");
                 i = getDataP(aux, *L);
                 p = nextP(aux, *L);
-                printf("Pillo los datos\n");
                 if (strcmp("TERMINADO", i.nsignal) == 0) {
                     deleteAtPosP(aux, L);
-                    printf("Elimino la posicion\n");
                 }
             }
         }
         if (strcmp(command[1], "-sig") == 0) {
-            for (p = firstP(*L); p != PNULL; p = nextP(p, *L)) {
-                i = getDataP(p, *L);
+            for (aux= firstP(*L); aux != PNULL; aux = p) {
+                i = getDataP(aux, *L);
+                p = nextP(aux, *L);
                 if (strcmp("SENALADO", i.nsignal) == 0) {
-                    deleteAtPosP(p, L);
+                    deleteAtPosP(aux, L);
                 }
             }
         }
@@ -327,12 +323,12 @@ void enviroment(char **varEnviroment, char *enviromentName) {
         printf("(%p) ", varEnviroment[p]);
         printf("%s\n", varEnviroment[p]);
     }
-  /*int p = 0;
-    for (char **env = varEnviroment; *env != 0; env++){
-        char *thisEnv = *env;
-        printf("%p -> %s [%d] = (%p) %s\n", &thisEnv, enviromentName, p, thisEnv, thisEnv);  
-        p++;
-  }*/
+    /*int p = 0;
+      for (char **env = varEnviroment; *env != 0; env++){
+          char *thisEnv = *env;
+          printf("%p -> %s [%d] = (%p) %s\n", &thisEnv, enviromentName, p, thisEnv, thisEnv);
+          p++;
+    }*/
 }
 
 int CambiarVariablebyAntonetiiii(char *var1, char *var2, char *valor, char *e[]) {

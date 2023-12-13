@@ -140,7 +140,7 @@ int processCommand(char *command[], int aux, tList *L, tListF *F,tListM * M, tLi
         else if (strcmp(command[0], "pmap") == 0) {
             Do_MemPmap();
         }else if ((strcmp(command[0], "quit") == 0) || (strcmp(command[0], "bye") == 0) ||
-                (strcmp(command[0], "exit") == 0)) { //Como hacen lo mismo se comprueban juntos
+                  (strcmp(command[0], "exit") == 0)) { //Como hacen lo mismo se comprueban juntos
             if (aux <= 2) {
                 return 1;                           //Devuelve 1 para terminar el bucle en el main
             } else {
@@ -335,24 +335,24 @@ void ayuda(char **command, int aux) {
         printf("recurse [n]: Invoca a la funcion recursive n veces\n");
     } else if (strcmp(command[1], "read") == 0) {
         printf("read [file][dirMem][bytes]: Lee el fichero nombrado en la direccion de memoria solicitada. Se"
-                "puede especificar cuantos bytes se quieren leer.\n");
+               "puede especificar cuantos bytes se quieren leer.\n");
     } else if (strcmp(command[1], "write") == 0) {
         printf("write [file][dirMem][bytes]: Escribe el numero de bytes desde dirMem en file\n"
-                "\t[-o]: Indica sobreescritura\n");
+               "\t[-o]: Indica sobreescritura\n");
     } else if (strcmp(command[1], "memdump") == 0) {
         printf("memdump [dirMem]: Muestra el numero de bytes que hay en dirMem.\n"
-                "\t[bytes]: Se especifica el numero de bytes a volcar\n");
+               "\t[bytes]: Se especifica el numero de bytes a volcar\n");
     } else if (strcmp(command[1], "memfill") == 0) {
         printf("memfill [dirMem]: Llena la direccion de memoria a partir de dirMem.\n"
-        "\t[bytes]: Se especifica el numero de bytes a rellenar\n"
-        "\t[var]: Se especifica el caracter, por defecto sera 'A'\n"); 
+               "\t[bytes]: Se especifica el numero de bytes a rellenar\n"
+               "\t[var]: Se especifica el caracter, por defecto sera 'A'\n");
     } else if (strcmp(command[1], "mem") == 0) {
         printf("mem [-blocks|-funcs|-vars|-all|-pmap]: Muestra detalles de la memoria de la shell.\n"
-        "\t[-blocks]: Muestra el numero de bloques asignados\n"
-        "\t[-funcs]: Muestra las direcciones de las funciones asignadas\n"
-        "\t[-vars]: Muestra las direcciones de las variables asignadas\n"
-        "\t[-pmap]: Muestra la salida del comando pmap\n"
-        "\t[-all]: Muestra todo lo nombrado anteriormente\n");                                
+               "\t[-blocks]: Muestra el numero de bloques asignados\n"
+               "\t[-funcs]: Muestra las direcciones de las funciones asignadas\n"
+               "\t[-vars]: Muestra las direcciones de las variables asignadas\n"
+               "\t[-pmap]: Muestra la salida del comando pmap\n"
+               "\t[-all]: Muestra todo lo nombrado anteriormente\n");
     }else if (strcmp(command[1], "uid") == 0) {
         printf("uid [-get|set] [-l] [id] Accede a las credenciales del proceso que ejecuta la shell.\n"
                "\t[-get]: muestra las credenciales\n"
