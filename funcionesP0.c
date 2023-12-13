@@ -258,7 +258,11 @@ void ayuda(char **command, int aux) {
                "\n \t- listopen\n \t- infosys"
                "\n \t- help\n \t- quit\n \t- exit"
                "\n \t- bye\n \t- create\n \t- stat"
-               "\n \t- list\n \t- delete\n \t- deltree");
+               "\n \t- list\n \t- delete\n \t- deltree"
+               "\n \t- uid\n \t- showvar\n \t- changevar"
+               "\n \t- subsvar\n \t- showenv\n \t- exec"
+               "\n \t- fork\n \t- jobs\n \t- deljobs"
+               "\n \t- job\n");
     } else if (strcmp(command[1], "authors") == 0) {
         printf("authors [-l]: Muestra los login de los autores.\n"
                "\t[-n]: Muestra los nombres de los autores.\n"
